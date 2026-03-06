@@ -26,4 +26,9 @@ gh pr create --title "Task: description" --body "Description"
 ```
 
 ## CodeRabbit Review
+**Important**: CodeRabbit is installed in WSL. Run from WSL with `--plain` flag:
+```bash
+coderabbit --plain
+```
+
 Run CodeRabbit review after completing the implementation.
