@@ -1,11 +1,10 @@
-# OpenCode Session Workflow
+# Session Workflow
 
 ## Instructions
 For each task, follow this workflow:
 
 1. **Create a new branch** - Use format: `task/<short-description>-<date>`
 2. **Execute the code** - Implement and run the solution
-3. **Review with CodeRabbit** - Run `coderabbit` or similar review tool
 4. **Push changes** - Push branch to remote
 5. **Create PR** - Create pull request with description
 
@@ -25,10 +24,5 @@ git push -u origin task/description-date
 gh pr create --title "Task: description" --body "Description"
 ```
 
-## CodeRabbit Review
-**Important**: CodeRabbit is installed in WSL. Run from WSL with `--plain` flag:
-```bash
-coderabbit --plain
-```
 
 Run CodeRabbit review after completing the implementation.
