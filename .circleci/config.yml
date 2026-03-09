@@ -9,9 +9,14 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Install Yarn
+          command: |
+            curl -o- -L https://yarnpkg.com/install.sh | bash
+            export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+      - run:
           name: Production build
           command: |
-            export __BUILD_VERSION="$(cat version.txt)"
+            export __BUILD_VERSION="$(cat version.txt || echo '0.0.0')"
             yarn build
       - persist_to_workspace:
           root: .
