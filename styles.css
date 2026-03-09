@@ -79,6 +79,14 @@ h1 {
     font-weight: 500;
 }
 
+.month-selector {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
 .month-badge {
     display: inline-block;
     background: linear-gradient(135deg, var(--primary), var(--primary-dark));
@@ -86,8 +94,35 @@ h1 {
     padding: 0.5rem 1.5rem;
     border-radius: 50px;
     font-weight: 600;
-    margin-top: 1rem;
     box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+    min-width: 200px;
+    text-align: center;
+}
+
+.month-nav-btn {
+    background: var(--card);
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 0.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    color: var(--secondary);
+    box-shadow: 0 2px 8px var(--shadow);
+}
+
+.month-nav-btn:hover {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+}
+
+.month-nav-btn:active {
+    transform: translateY(0);
 }
 
 .summary-card {

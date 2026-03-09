@@ -1,17 +1,47 @@
-// In-memory storage for the session
+// In-memory storage for the session - organized by month
 const timeData = {
-    weeks: {}
+    months: {} // Format: { "2026-03": { week1: 5, week2: 3, ... }, ... }
 };
+
+// Track the currently selected date
+let currentDate = new Date();
 
 // Initialize the app
 function init() {
-    const now = new Date();
-    const monthName = now.toLocaleString('default', { month: 'long', year: 'numeric' });
+    updateDisplay();
+}
+
+// Update the entire display for the current month
+function updateDisplay() {
+    const monthName = currentDate.toLocaleString('default', { month: 'long', year: 'numeric' });
     document.getElementById('currentMonth').textContent = monthName;
 
     // Generate weeks for current month
-    generateWeeks(now);
+    generateWeeks(currentDate);
     updateTotal();
+}
+
+// Change the selected month
+function changeMonth(direction) {
+    // direction: -1 for previous month, +1 for next month
+    currentDate.setMonth(currentDate.getMonth() + direction);
+    updateDisplay();
+}
+
+// Get the month key for storing data
+function getMonthKey(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    return `${year}-${month}`;
+}
+
+// Get data for the current month
+function getCurrentMonthData() {
+    const monthKey = getMonthKey(currentDate);
+    if (!timeData.months[monthKey]) {
+        timeData.months[monthKey] = {};
+    }
+    return timeData.months[monthKey];
 }
 
 function generateWeeks(date) {
@@ -25,13 +55,16 @@ function generateWeeks(date) {
     const weeksContainer = document.getElementById('weeksContainer');
     weeksContainer.innerHTML = '';
 
+    // Get data for this month
+    const monthData = getCurrentMonthData();
+
     // Calculate weeks
-    let currentDate = new Date(firstDay);
+    let currentWeekDate = new Date(firstDay);
     let weekNumber = 1;
 
-    while (currentDate <= lastDay) {
-        const weekStart = new Date(currentDate);
-        const weekEnd = new Date(currentDate);
+    while (currentWeekDate <= lastDay) {
+        const weekStart = new Date(currentWeekDate);
+        const weekEnd = new Date(currentWeekDate);
         weekEnd.setDate(weekEnd.getDate() + 6);
         
         // Don't go past end of month
@@ -39,14 +72,14 @@ function generateWeeks(date) {
             weekEnd.setTime(lastDay.getTime());
         }
 
-        createWeekCard(weekNumber, weekStart, weekEnd);
+        createWeekCard(weekNumber, weekStart, weekEnd, monthData);
         
-        currentDate.setDate(currentDate.getDate() + 7);
+        currentWeekDate.setDate(currentWeekDate.getDate() + 7);
         weekNumber++;
     }
 }
 
-function createWeekCard(weekNum, startDate, endDate) {
+function createWeekCard(weekNum, startDate, endDate, monthData) {
     const weeksContainer = document.getElementById('weeksContainer');
     const weekId = `week${weekNum}`;
     
@@ -56,7 +89,7 @@ function createWeekCard(weekNum, startDate, endDate) {
         <div class="week-header">
             <div class="week-title">Week ${weekNum}</div>
             <div class="week-days" id="${weekId}-display">
-                ${timeData.weeks[weekId] || 0}
+                ${monthData[weekId] || 0}
             </div>
         </div>
         <div style="font-size: 0.875rem; color: var(--text-light); margin-bottom: 0.5rem;">
@@ -69,7 +102,7 @@ function createWeekCard(weekNum, startDate, endDate) {
                 min="0" 
                 max="7" 
                 placeholder="Enter days worked"
-                value="${timeData.weeks[weekId] || ''}"
+                value="${monthData[weekId] || ''}"
             >
             <button onclick="saveDays('${weekId}')">Save</button>
         </div>
@@ -94,8 +127,9 @@ function saveDays(weekId) {
         return;
     }
     
-    // Save to memory
-    timeData.weeks[weekId] = value;
+    // Save to current month's data
+    const monthData = getCurrentMonthData();
+    monthData[weekId] = value;
     
     // Update display with animation
     display.classList.add('success-animation');
@@ -109,7 +143,8 @@ function saveDays(weekId) {
 }
 
 function updateTotal() {
-    const total = Object.values(timeData.weeks).reduce((sum, days) => sum + days, 0);
+    const monthData = getCurrentMonthData();
+    const total = Object.values(monthData).reduce((sum, days) => sum + days, 0);
     const totalElement = document.getElementById('totalDays');
     
     totalElement.classList.add('success-animation');
