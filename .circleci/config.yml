@@ -31,6 +31,9 @@ jobs:
       - attach_workspace:
           at: .
       - run:
+          name: Install pnpm
+          command: npm install -g pnpm
+      - run:
           name: Run Playwright Tests
           command: |
             mkdir test-results
