@@ -9,6 +9,23 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Production build
+          command: |
+            export __BUILD_VERSION="$(cat version.txt)"
+            yarn build
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
+
+  test:
+    docker:
+      - image: cimg/base:2023.11
+    parallelism: 2
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
           name: Run Playwright Tests
           command: |
             mkdir test-results
@@ -22,3 +39,4 @@ workflows:
   build-and-test:
     jobs:
       - build
+      - test
