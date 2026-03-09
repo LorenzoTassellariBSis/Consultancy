@@ -1,0 +1,28 @@
+{
+  "name": "time-tracker-tests",
+  "version": "1.0.0",
+  "description": "Playwright tests for Time Tracker application",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:debug": "playwright test --debug",
+    "test:chromium": "playwright test --project=chromium",
+    "test:firefox": "playwright test --project=firefox",
+    "test:webkit": "playwright test --project=webkit",
+    "test:mobile": "playwright test --project='Mobile Chrome' --project='Mobile Safari'",
+    "test:ui": "playwright test --ui",
+    "report": "playwright show-report",
+    "server": "http-server -p 8080"
+  },
+  "keywords": [
+    "playwright",
+    "testing",
+    "time-tracker"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@playwright/test": "^1.40.0",
+    "http-server": "^14.1.1"
+  }
+}
