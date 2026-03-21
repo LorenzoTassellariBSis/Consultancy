@@ -1,0 +1,51 @@
+version: 2.1
+
+orbs:
+  node: circleci/node@5
+
+jobs:
+  playwright-tests:
+    docker:
+      - image: mcr.microsoft.com/playwright:v1.40.0-jammy
+    resource_class: medium
+    environment:
+      CI: "true"
+    steps:
+      - checkout
+
+      - node/install:
+          node-version: "20"
+
+      - restore_cache:
+          keys:
+            - npm-deps-v1-{{ checksum "package.json" }}
+            - npm-deps-v1-
+
+      - run:
+          name: Install dependencies
+          command: npm ci
+
+      - save_cache:
+          key: npm-deps-v1-{{ checksum "package.json" }}
+          paths:
+            - node_modules
+
+      - run:
+          name: Run Playwright tests
+          command: npm test
+
+      - store_artifacts:
+          path: playwright-report
+          destination: playwright-report
+
+      - store_artifacts:
+          path: test-results
+          destination: test-results
+
+workflows:
+  test-on-commit:
+    jobs:
+      - playwright-tests:
+          filters:
+            branches:
+              only: /.*/
